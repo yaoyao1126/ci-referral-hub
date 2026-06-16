@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>電子耳轉介資訊中樞 · CLINICO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --brand:#FFC400;
+    --brand-600:#E5A400;
+    --navy:#0F5887;
+    --navy-700:#0C466B;
+    --navy-900:#082f4a;
+    --teal:#16B79A;
+    --teal-600:#0E9B81;
+    --cream:#FBF8F1;
+    --paper:#FFFFFF;
+    --ink:#1E2A33;
+    --muted:#5E6C76;
+    --line:#ECE5D3;
+    --gold:#F0A500;
+    --shadow:0 1px 2px rgba(8,47,74,.05),0 8px 24px rgba(8,47,74,.07);
+    --shadow-lg:0 12px 40px rgba(8,47,74,.14);
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Noto Sans TC",system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--cream);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{font-family:"Inter","Noto Sans TC",sans-serif;font-feature-settings:"tnum"}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:var(--brand);
+    color:var(--navy-900);
+    box-shadow:0 2px 18px rgba(229,164,0,.38);
+  }
+  .bar{
+    max-width:1180px;margin:0 auto;padding:0 22px;
+    display:flex;align-items:center;gap:18px;min-height:64px;
+  }
+  .brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:.5px;white-space:nowrap}
+  .brand .mark{
+    width:30px;height:30px;border-radius:9px;
+    background:var(--teal);display:grid;place-items:center;flex:none;
+  }
+  .brand .mark svg{width:18px;height:18px}
+  .brand b{font-size:1.06rem}
+  .brand span{font-size:.72rem;font-weight:500;opacity:.7;display:block;letter-spacing:2px}
+  nav{margin-left:auto;display:flex;gap:2px;flex-wrap:wrap}
+  .tab{
+    appearance:none;border:0;background:transparent;color:rgba(8,47,74,.74);
+    font-family:inherit;font-size:.92rem;font-weight:700;cursor:pointer;
+    padding:9px 14px;border-radius:10px;transition:.18s;white-space:nowrap;
+  }
+  .tab:hover{background:rgba(255,255,255,.5);color:var(--navy-900)}
+  .tab.active{background:var(--navy);color:#fff}
+  .menu-btn{display:none;margin-left:auto;background:rgba(8,47,74,.14);border:0;color:var(--navy-900);border-radius:9px;padding:8px 12px;cursor:pointer;font-size:1.2rem}
+
+  /* ---------- Layout ---------- */
+  main{max-width:1180px;margin:0 auto;padding:34px 22px 80px}
+  .view{display:none;animation:fade .4s ease}
+  .view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.view{animation:none}*{scroll-behavior:auto}}
+
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:.74rem;font-weight:700;letter-spacing:2px;
+    color:var(--navy-700);text-transform:uppercase;margin-bottom:10px;
+  }
+  .eyebrow::before{content:"";width:22px;height:3px;background:var(--brand);border-radius:2px}
+  h1.page{font-size:2rem;font-weight:900;color:var(--navy-700);line-height:1.2;letter-spacing:-.5px}
+  .lead{color:var(--muted);max-width:660px;margin-top:8px;font-size:1.02rem}
+  .section-gap{margin-top:34px}
+
+  /* ---------- Dashboard ---------- */
+  .stat-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+  .stat{
+    background:var(--navy);color:#fff;border-radius:var(--radius);
+    padding:22px 24px;position:relative;overflow:hidden;box-shadow:var(--shadow);
+  }
+  .stat::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,196,0,.22)}
+  .stat .k{font-size:.82rem;opacity:.8;font-weight:500;position:relative}
+  .stat .v{font-size:2.5rem;font-weight:800;line-height:1.1;margin-top:6px;position:relative}
+  .stat .v small{font-size:1rem;font-weight:600;opacity:.85;margin-left:3px}
+  .stat .d{font-size:.78rem;color:var(--brand);font-weight:700;margin-top:4px;position:relative}
+
+  .panel{
+    background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);overflow:hidden;
+  }
+  .panel-head{
+    display:flex;align-items:center;gap:10px;padding:18px 22px;
+    border-bottom:1px solid var(--line);
+  }
+  .panel-head h3{font-size:1.1rem;font-weight:900;color:var(--navy-700)}
+  .panel-head .pill{
+    margin-left:auto;font-size:.74rem;font-weight:700;color:var(--teal-600);
+    background:rgba(22,183,154,.12);padding:4px 11px;border-radius:30px;
+  }
+
+  table{width:100%;border-collapse:collapse}
+  thead th{
+    text-align:left;font-size:.78rem;font-weight:700;color:var(--muted);
+    padding:13px 22px;background:#F6F3E6;letter-spacing:.5px;
+  }
+  thead th.r,tbody td.r{text-align:right}
+  tbody td{padding:15px 22px;border-top:1px solid var(--line);font-size:.95rem}
+  tbody tr:hover{background:#F8F6EC}
+  .rank{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;font-weight:800;font-size:.9rem;background:#EDEAD8;color:var(--muted)}
+  .rank.g1{background:var(--gold);color:#fff}
+  .rank.g2{background:#B9C2CB;color:#fff}
+  .rank.g3{background:#CD8E54;color:#fff}
+  .store{font-weight:700;color:var(--ink)}
+  .who{font-size:.84rem;color:var(--muted)}
+  .bonus{font-weight:800;color:var(--teal-600);font-family:"Inter",sans-serif}
+
+  .reward-card{
+    background:linear-gradient(135deg,#FFD43A 0%,var(--brand) 55%,var(--brand-600) 100%);
+    color:var(--navy-900);border-radius:var(--radius);padding:26px;box-shadow:0 10px 30px rgba(229,164,0,.3);
+    display:flex;align-items:center;gap:26px;flex-wrap:wrap;
+  }
+  .reward-card .big{font-size:3.4rem;font-weight:800;line-height:1;font-family:"Inter",sans-serif}
+  .reward-card .big small{font-size:1rem;font-weight:600;opacity:.9}
+  .reward-card .txt{flex:1;min-width:240px}
+  .reward-card .txt b{font-size:1.12rem;display:block;margin-bottom:5px}
+  .reward-card .txt p{font-size:.92rem;opacity:.94;line-height:1.55}
+
+  .grid2{display:grid;grid-template-columns:2fr 1fr;gap:20px;align-items:start}
+  @media (max-width:860px){.grid2{grid-template-columns:1fr}}
+
+  /* ---------- Referral checker ---------- */
+  .checker{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:start;margin-top:26px}
+  @media (max-width:860px){.checker{grid-template-columns:1fr}}
+  .crit{
+    display:flex;gap:14px;align-items:flex-start;padding:18px 20px;
+    background:var(--paper);border:2px solid var(--line);border-radius:14px;
+    cursor:pointer;transition:.18s;margin-bottom:14px;user-select:none;
+  }
+  .crit:hover{border-color:#cdd9b9;transform:translateY(-1px)}
+  .crit.on{border-color:var(--teal);background:rgba(22,183,154,.07);box-shadow:0 4px 14px rgba(22,183,154,.13)}
+  .crit .box{
+    width:26px;height:26px;border-radius:8px;border:2px solid #C9D2BB;flex:none;margin-top:2px;
+    display:grid;place-items:center;transition:.18s;
+  }
+  .crit.on .box{background:var(--teal);border-color:var(--teal)}
+  .crit .box svg{width:15px;height:15px;opacity:0;transition:.18s;color:#fff}
+  .crit.on .box svg{opacity:1}
+  .crit b{font-size:1rem;color:var(--navy-700)}
+  .crit p{font-size:.86rem;color:var(--muted);margin-top:3px}
+
+  .result{
+    position:sticky;top:84px;background:var(--navy);color:#fff;
+    border-radius:var(--radius);padding:26px;text-align:center;box-shadow:var(--shadow-lg);
+  }
+  .result .gauge{
+    width:128px;height:128px;margin:6px auto 16px;border-radius:50%;
+    display:grid;place-items:center;font-weight:800;font-size:1.9rem;font-family:"Inter",sans-serif;
+    background:conic-gradient(var(--teal) 0deg,rgba(255,255,255,.14) 0deg);
+    transition:background .4s ease;
+  }
+  .result .gauge span{background:var(--navy);width:96px;height:96px;border-radius:50%;display:grid;place-items:center}
+  .result h4{font-size:1.25rem;font-weight:900;margin-bottom:6px}
+  .result p{font-size:.9rem;opacity:.85}
+  .result .cta{
+    display:inline-block;margin-top:18px;background:var(--teal);color:#06302a;
+    font-weight:800;padding:11px 22px;border-radius:11px;font-size:.95rem;
+    opacity:.35;pointer-events:none;transition:.25s;
+  }
+  .result.go .cta{opacity:1;pointer-events:auto;cursor:pointer}
+  .result.go .cta:hover{background:#fff}
+
+  /* ---------- Cards / steps ---------- */
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin-top:26px}
+  .card{
+    background:var(--paper);border:1px solid var(--line);border-radius:14px;
+    padding:22px;box-shadow:var(--shadow);transition:.18s;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+  .card .tag{font-size:.72rem;font-weight:700;color:var(--teal-600);letter-spacing:1px}
+  .card h4{font-size:1.05rem;font-weight:900;color:var(--navy-700);margin:8px 0 8px}
+  .card .obj{font-size:.9rem;color:var(--muted);font-style:italic;border-left:3px solid var(--line);padding-left:11px;margin-bottom:12px}
+  .card .script{font-size:.92rem;color:var(--ink);line-height:1.65}
+  .card .script b{color:var(--teal-600)}
+  .subcard{display:flex;flex-direction:column}
+  .subcard .head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .subcard .term{font-size:.72rem;font-weight:700;color:#fff;background:var(--navy);padding:3px 10px;border-radius:30px;white-space:nowrap}
+  .subcard h4{margin:10px 0 2px}
+  .subcard .amt{font-family:"Inter",sans-serif;font-weight:800;font-size:2.1rem;color:var(--teal-600);line-height:1.1;margin:8px 0 4px;transition:.25s}
+  .subcard .amt small{font-size:.9rem;font-weight:600;color:var(--muted)}
+  .subcard .cond{font-size:.86rem;color:var(--muted);margin-top:10px;padding-top:12px;border-top:1px solid var(--line);line-height:1.65}
+  .subcard .cond b{color:var(--navy-700)}
+  .nhi-panel{margin-top:20px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-900) 100%);color:#fff;border-radius:var(--radius);padding:24px 26px;box-shadow:var(--shadow)}
+  .nhi-panel h3{font-size:1.1rem;font-weight:900;margin-bottom:4px}
+  .nhi-panel .sub{font-size:.86rem;opacity:.8;margin-bottom:16px}
+  .nhi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .nhi-item{background:rgba(255,255,255,.08);border-radius:12px;padding:14px 16px}
+  .nhi-item b{display:block;font-size:.96rem;margin-bottom:4px;color:#aee9dc}
+  .nhi-item p{font-size:.84rem;opacity:.9;line-height:1.55}
+
+  .steps{counter-reset:s;display:flex;flex-direction:column;gap:0;margin-top:26px}
+  .step{display:flex;gap:20px;padding-bottom:28px;position:relative}
+  .step:not(:last-child)::before{content:"";position:absolute;left:21px;top:46px;bottom:0;width:2px;background:var(--line)}
+  .step .n{
+    counter-increment:s;width:44px;height:44px;border-radius:12px;flex:none;
+    background:var(--navy);color:#fff;display:grid;place-items:center;
+    font-weight:800;font-family:"Inter",sans-serif;font-size:1.15rem;z-index:1;
+  }
+  .step .n::before{content:counter(s)}
+  .step-body{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 22px;box-shadow:var(--shadow)}
+  .step-body h4{font-size:1.06rem;font-weight:900;color:var(--navy-700);margin-bottom:6px}
+  .step-body p{font-size:.94rem;color:var(--muted)}
+  .step-body .tagchip{display:inline-block;background:var(--navy-900);color:#aee9dc;font-family:"Inter",monospace;font-weight:700;font-size:.88rem;padding:3px 10px;border-radius:7px;margin:0 2px}
+  .step-body .dur{display:inline-block;font-size:.74rem;font-weight:700;color:var(--teal-600);background:rgba(22,183,154,.13);padding:3px 11px;border-radius:30px;margin-left:8px;vertical-align:middle}
+  .step-body .hl{color:var(--teal-600);font-weight:700}
+
+  .facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px}
+  .fact{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:17px 19px;box-shadow:var(--shadow)}
+  .fact .v{font-family:"Inter",sans-serif;font-weight:800;font-size:1.65rem;color:var(--navy-700);line-height:1.1}
+  .fact .k{font-size:.82rem;color:var(--muted);margin-top:3px}
+  @media (max-width:760px){.facts{grid-template-columns:repeat(2,1fr)}}
+
+  .team{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  .team .p{background:var(--paper);border:1px solid var(--line);border-radius:30px;padding:8px 17px;font-size:.92rem;font-weight:700;color:var(--navy-700);box-shadow:var(--shadow)}
+  .sub-h{font-size:1.1rem;font-weight:900;color:var(--navy-700);margin:34px 0 0}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .clin td{vertical-align:top;line-height:1.6}
+  .clin .age{font-weight:800;color:var(--navy-700);white-space:nowrap}
+  .clin .db{font-family:"Inter","Noto Sans TC",sans-serif;font-weight:700;color:var(--teal-600)}
+
+  .sync{font-size:.8rem;font-weight:700;margin-left:6px;white-space:nowrap}
+  .sync.ok{color:var(--teal-600)}
+  .sync.off{color:#b8862a}
+  .refresh{appearance:none;border:1.5px solid var(--line);background:var(--paper);font-family:inherit;font-size:.8rem;font-weight:700;color:var(--navy-700);padding:5px 13px;border-radius:30px;cursor:pointer;margin-left:8px;transition:.16s}
+  .refresh:hover{border-color:var(--teal);color:var(--teal-600)}
+  .stat-strip.kpi4{grid-template-columns:repeat(4,1fr)}
+  .stat-strip.kpi4 .v{font-size:2.1rem}
+  @media (max-width:760px){.stat-strip.kpi4{grid-template-columns:repeat(2,1fr)}}
+  .fn{display:flex;align-items:center;gap:12px;margin:11px 0}
+  .fn .lbl{font-size:.84rem;color:var(--ink);width:108px;flex:none;font-weight:500}
+  .fn .track{flex:1;background:#EBE7D4;border-radius:8px;height:24px;overflow:hidden}
+  .fn .barf{height:100%;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:flex-end;padding-right:9px;color:#fff;font-size:.78rem;font-weight:800;font-family:"Inter",sans-serif;min-width:26px;transition:width .6s ease}
+  .fn.done .barf{background:var(--teal)}
+
+  .prod-h{font-size:1.25rem;font-weight:900;color:var(--navy-700);margin:34px 0 4px;display:flex;align-items:center;gap:10px}
+  .prod-h::before{content:"";width:6px;height:22px;background:var(--brand);border-radius:3px}
+  .prod-sub{color:var(--muted);font-size:.94rem;margin-bottom:6px}
+  .badge{display:inline-block;font-size:.72rem;font-weight:800;padding:4px 11px;border-radius:30px;letter-spacing:.5px;white-space:nowrap}
+  .badge.free{background:rgba(22,183,154,.15);color:var(--teal-600)}
+  .badge.paid{background:#FFF1C9;color:#9a6b00;border:1px solid #F2D479}
+  .prod-card{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--brand);border-radius:14px;padding:22px;box-shadow:var(--shadow);transition:.18s}
+  .prod-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+  .prod-card.hl{border-top-color:var(--teal)}
+  .prod-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .prod-card .model{font-size:1.12rem;font-weight:900;color:var(--navy-700);line-height:1.25}
+  .prod-card .series{font-size:.83rem;color:var(--muted);margin-top:2px}
+  .prod-card ul{list-style:none;margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+  .prod-card li{font-size:.89rem;color:var(--ink);padding-left:19px;position:relative;margin:7px 0;line-height:1.5}
+  .prod-card li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:2px;background:var(--brand)}
+  .prod-card.hl li::before{background:var(--teal)}
+
+  .tip{display:flex;gap:14px;align-items:flex-start;background:rgba(22,183,154,.1);border:1px solid rgba(22,183,154,.35);border-left:5px solid var(--teal);border-radius:14px;padding:18px 20px;margin-top:20px}
+  .tip .ic{flex:none;width:34px;height:34px;border-radius:10px;background:var(--teal);display:grid;place-items:center;color:#fff}
+  .tip .ic svg{width:19px;height:19px}
+  .tip h4{font-size:1rem;font-weight:900;color:var(--teal-600);margin-bottom:4px}
+  .tip p{font-size:.92rem;color:var(--ink);line-height:1.62}
+  .tip .hosp{font-weight:800;color:var(--navy-700)}
+
+  .principle{display:grid;grid-template-columns:330px 1fr;gap:26px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-top:10px}
+  @media (max-width:780px){.principle{grid-template-columns:1fr}}
+  .principle .art{width:100%;height:auto;max-width:340px;margin:0 auto;display:block}
+  .flow{list-style:none;counter-reset:f}
+  .flow li{counter-increment:f;display:flex;gap:13px;align-items:flex-start;margin:12px 0}
+  .flow li .fn2{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-family:"Inter",sans-serif;font-weight:800;font-size:.9rem;background:var(--navy);color:#fff}
+  .flow li .fn2::before{content:counter(f)}
+  .flow li:nth-child(-n+3) .fn2{background:var(--brand);color:var(--navy-900)}
+  .flow li b{color:var(--navy-700);font-size:.96rem}
+  .flow li .d2{display:block;font-size:.85rem;color:var(--muted);margin-top:1px}
+  .prod-card .pic{height:100px;display:grid;place-items:center;background:linear-gradient(135deg,#FBF8F1,#FFF4D6);border:1px solid var(--line);border-radius:11px;margin-bottom:14px}
+  .prod-card .pic svg{height:78px;width:auto}
+
+  .contact{display:flex;gap:14px;align-items:flex-start;background:rgba(15,88,135,.06);border:1px solid var(--line);border-left:5px solid var(--navy);border-radius:14px;padding:18px 20px;margin-top:20px}
+  .contact .ic{flex:none;width:34px;height:34px;border-radius:10px;background:var(--navy);display:grid;place-items:center;color:#fff}
+  .contact .ic svg{width:18px;height:18px}
+  .contact h4{font-size:1rem;font-weight:900;color:var(--navy-700);margin-bottom:4px}
+  .contact .lead2{font-size:.9rem;color:var(--muted);line-height:1.55;margin-bottom:8px}
+  .contact .crow{font-size:.92rem;color:var(--ink);padding:8px 0;border-top:1px dashed var(--line)}
+  .contact .crow b{color:var(--navy-700)}
+  .contact .crow span{color:var(--muted);font-size:.85rem;margin-left:6px}
+
+  /* ---------- Subsidy ---------- */
+  .filter{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+  .chip{
+    appearance:none;border:1.5px solid var(--line);background:var(--paper);
+    font-family:inherit;font-size:.88rem;font-weight:700;color:var(--muted);
+    padding:8px 16px;border-radius:30px;cursor:pointer;transition:.16s;
+  }
+  .chip:hover{border-color:var(--teal)}
+  .chip.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .note{
+    margin-top:18px;background:#FBF4E2;border:1px solid #EBD9A8;border-radius:12px;
+    padding:13px 18px;font-size:.86rem;color:#8a6d2a;display:flex;gap:9px;align-items:flex-start;
+  }
+  .note svg{flex:none;width:17px;height:17px;margin-top:2px}
+
+  footer{text-align:center;color:var(--muted);font-size:.82rem;padding:30px 22px 50px;border-top:1px solid var(--line);margin-top:20px}
+
+  @media (max-width:760px){
+    nav{display:none;position:absolute;top:64px;left:0;right:0;background:var(--brand);flex-direction:column;padding:10px;gap:4px;box-shadow:var(--shadow-lg)}
+    nav.open{display:flex}
+    .tab{text-align:left;width:100%}
+    .menu-btn{display:block}
+    .stat-strip{grid-template-columns:1fr}
+    h1.page{font-size:1.6rem}
+    .reward-card .big{font-size:2.6rem}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <div class="brand">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#06302a" stroke-width="2.4" stroke-linecap="round"><path d="M3 12a9 9 0 0 1 9-9"/><path d="M7 12a5 5 0 0 1 5-5"/><circle cx="12" cy="12" r="1.6" fill="#06302a" stroke="none"/></svg></span>
+      <div><b>電子耳轉介資訊中樞</b><span>CLINICO · CI REFERRAL HUB</span></div>
+    </div>
+    <button class="menu-btn" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
+    <nav>
+      <button class="tab active" data-go="dash">戰情總覽</button>
+      <button class="tab" data-go="guide">轉介指南</button>
+      <button class="tab" data-go="flow">轉介流程</button>
+      <button class="tab" data-go="journey">評估與手術</button>
+      <button class="tab" data-go="products">產品知識</button>
+      <button class="tab" data-go="subsidy">補助懶人包</button>
+      <button class="tab" data-go="scripts">破冰話術</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===== DASHBOARD ===== -->
+  <section class="view active" id="dash">
+    <div class="eyebrow">即時串接雲端 · 轉介追蹤表</div>
+    <h1 class="page">本月轉介戰情總覽</h1>
+    <p class="lead">資料即時同步自「轉介追蹤」雲端表單，公開、公平、看得到成果。
+      <span class="sync" id="syncDot">● 連線中…</span>
+      <button class="refresh" id="refreshBtn">↻ 重新整理</button>
+    </p>
+
+    <div class="stat-strip kpi4">
+      <div class="stat"><div class="k">總轉介數</div><div class="v num" id="kTotal">–</div><div class="d">本月累計</div></div>
+      <div class="stat"><div class="k">成功開刀數</div><div class="v num" id="kSurg">–</div><div class="d">已完成植入</div></div>
+      <div class="stat"><div class="k">開刀轉換率</div><div class="v num" id="kRate">–</div><div class="d">開刀 ÷ 轉介</div></div>
+      <div class="stat"><div class="k">待處理</div><div class="v num" id="kPend">–</div><div class="d">已登錄未跟進</div></div>
+    </div>
+
+    <div class="grid2 section-gap">
+      <div class="panel">
+        <div class="panel-head"><h3>🏆 門市轉介排行榜</h3><span class="pill">有效轉介 · 即時</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>排名</th><th>轉介門市</th><th>服務人員</th><th class="r">有效轉介</th><th class="r">預估獎金</th></tr></thead>
+            <tbody id="lbBody"><tr><td colspan="5" style="padding:26px;text-align:center;color:var(--muted)">載入中…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="panel-head"><h3>各階段案件漏斗</h3></div>
+          <div id="funnel" style="padding:16px 20px"></div>
+        </div>
+        <div class="reward-card" style="margin-top:18px">
+          <div class="big num">1,000<br><small>NTD / 件</small></div>
+          <div class="txt">
+            <b>門檻前移，獎勵更好拿</b>
+            <p>不再需要苦等病患「成功開刀」。只要成功建立轉介名單，即可獲得 NT$1,000 獎勵。</p>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:18px">
+          <div class="panel-head"><h3>獎金發放說明</h3></div>
+          <div style="padding:16px 20px;font-size:.9rem;color:var(--muted);line-height:1.75">
+            <b style="color:var(--navy-700)">發放對象：</b>工作日誌「服務項目＝CI轉介」且「服務人員」填寫正確者。<br>
+            <b style="color:var(--navy-700)">計算方式：</b>每筆有效轉介 NT$1,000，重複個案由總部統一去重。<br>
+            <b style="color:var(--navy-700)">發放時間：</b>每月 <b>15 日</b>發放上個月的有效轉介名單獎金。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note" id="syncNote" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01" stroke-linecap="round"/></svg><span id="syncMsg"></span></div>
+  </section>
+
+  <!-- ===== GUIDE / CHECKER ===== -->
+  <section class="view" id="guide">
+    <div class="eyebrow">實戰轉介指南 · 一分鐘判斷</div>
+    <h1 class="page">這位客戶，是潛在的電子耳對象嗎？</h1>
+    <p class="lead">勾選眼前客戶符合的狀況，系統即時判斷是否建議轉介。三項核心指標，幫你在一分鐘內做出判斷。</p>
+
+    <div class="checker">
+      <div>
+        <div class="crit" data-crit><div class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><div><b>重度至極重度聽損</b><p>聽力圖顯示顯著衰退，一般助聽器方案已難以提供足夠增益。</p></div></div>
+        <div class="crit" data-crit><div class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><div><b>助聽器配戴效益不佳</b><p>雙耳規律配戴助聽器超過三個月，但語音辨識度與日常溝通流暢度仍未見改善。</p></div></div>
+        <div class="crit" data-crit><div class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><div><b>日常溝通極度吃力</b><p>病患或家屬主動反映對目前聽覺方案不滿意，具備進一步了解手術資訊的意願。</p></div></div>
+      </div>
+
+      <div class="result" id="result">
+        <div class="gauge" id="gauge"><span id="gnum" class="num">0/3</span></div>
+        <h4 id="rtitle">尚未勾選</h4>
+        <p id="rdesc">勾選左側符合的狀況，即時得到判斷建議。</p>
+        <div class="cta" id="rcta" data-go="flow">前往建立轉介 →</div>
+      </div>
+    </div>
+
+    <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01" stroke-linecap="round"/></svg><span><b>年齡提醒：</b>成人補助限 <b>18 歲以上、未滿 65 歲</b>。65 歲以上長輩不在成人補助範圍，轉介前先確認年齡，避免家屬期待落差。（18 歲以下另依健保適應症評估。）</span></div>
+  </section>
+
+  <!-- ===== FLOW ===== -->
+  <section class="view" id="flow">
+    <div class="eyebrow">零摩擦轉介流程 · 不導入新表單</div>
+    <h1 class="page">建立轉介，只要三步驟</h1>
+    <p class="lead">完全沿用既有門市系統，不需額外填寫外部表單。維持你最習慣的作業流程，總部每週自動撈取報表。</p>
+
+    <div class="steps">
+      <div class="step"><div class="n"></div><div class="step-body"><h4>於門市系統新增「工作日誌」</h4><p>在「科林助聽器」系統照常新增工作日誌，填寫日期、時間、首次進店、部門與服務人員——都是你每天在做的事，無需學習新工具。</p></div></div>
+      <div class="step"><div class="n"></div><div class="step-body"><h4>「服務項目」務必選擇「CI轉介」</h4><p>在「服務資料」區的<b>服務項目</b>欄位，選擇 <span class="tagchip">CI/Baha相關 → CI轉介</span>。<span class="hl">這是唯一的關鍵動作</span>——沒選到，這筆就不會被系統計入轉介，也領不到獎金。</p></div></div>
+      <div class="step"><div class="n"></div><div class="step-body"><h4>按「確定」送出，交給總部</h4><p>總部每週一自動撈取所有「服務項目＝<span class="tagchip">CI轉介</span>」的工作日誌，精準統計、自動發放獎金、更新戰情排行榜。前線只需專注於顧客溝通。</p></div></div>
+    </div>
+
+    <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01" stroke-linecap="round"/></svg><span><b>關鍵提醒：</b>只有「服務項目」選了「CI轉介」的工作日誌，才會被每週戰報撈取並計算獎金。請同時確認「服務人員」欄位填寫正確，以利獎金歸屬。</span></div>
+
+    <div class="contact">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+      <div style="flex:1">
+        <h4>卡關了？聯絡 CI 專員</h4>
+        <p class="lead2">轉介後客戶有疑問、或不確定是否適合，直接聯絡 CI 專員協助評估，不用自己硬撐：</p>
+        <div class="crow"><b>張乃文</b> · 北區・中區<span><a href="mailto:star@clinico.com.tw" style="color:var(--teal-600);text-decoration:none">star@clinico.com.tw</a></span></div>
+        <div class="crow"><b>柯玉聘</b> · 北區<span><a href="mailto:cora@clinico.com.tw" style="color:var(--teal-600);text-decoration:none">cora@clinico.com.tw</a></span></div>
+        <div class="crow"><b>陳雅玲</b> · 南區<span><a href="mailto:ana.chen@clinico.com.tw" style="color:var(--teal-600);text-decoration:none">ana.chen@clinico.com.tw</a></span></div>
+        <div class="lead2" style="margin-top:9px;margin-bottom:0">公司內部 WeChat 可直接聯繫，毋需另留 Line。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== JOURNEY ===== -->
+  <section class="view" id="journey">
+    <div class="eyebrow">評估與手術 · 開刀流程透明化</div>
+    <h1 class="page">從評估到開刀，病患會經歷什麼</h1>
+    <p class="lead">了解完整流程，回答家屬「開刀會怎樣、要多久」才有底氣。這是化解「怕開刀有風險」最有力的工具。</p>
+
+    <div class="facts">
+      <div class="fact"><div class="v num">1–2 個月</div><div class="k">術前評估期</div></div>
+      <div class="fact"><div class="v num">3–4 小時</div><div class="k">手術時間</div></div>
+      <div class="fact"><div class="v num">3–6 天</div><div class="k">住院天數</div></div>
+      <div class="fact"><div class="v num">5–6 次</div><div class="k">開頻調圖</div></div>
+    </div>
+
+    <h3 class="sub-h">完整療程四階段</h3>
+    <div class="steps">
+      <div class="step"><div class="n"></div><div class="step-body"><h4>術前評估<span class="dur">1–2 個月</span></h4><p>由評估團隊進行門診諮商、聽力評估、生理影像、語言與心理等多方面綜合評估，決定是否適合植入。各醫院時間略有不同。</p></div></div>
+      <div class="step"><div class="n"></div><div class="step-body"><h4>手術<span class="dur">住院 3–6 天</span></h4><p>植入手術時間約 3–4 小時。</p></div></div>
+      <div class="step"><div class="n"></div><div class="step-body"><h4>開頻／調圖<span class="dur">2 回診 · 5–6 次</span></h4><p>出院前或回診時開頻，設定植入電極的電流刺激量，使植入者有最佳聽覺刺激。通常需數次調圖，電流圖才趨於穩定。</p></div></div>
+      <div class="step"><div class="n"></div><div class="step-body"><h4>術後聽語復健</h4><p>有助於加快適應人工電子耳的聲音。可於醫院、學校、復健機構或<span class="hl">科林公司</span>進行——這正是我們的服務優勢。</p></div></div>
+    </div>
+
+    <h3 class="sub-h">評估團隊組成</h3>
+    <div class="team">
+      <span class="p">耳鼻喉科醫師</span>
+      <span class="p">聽力師</span>
+      <span class="p">語言治療師</span>
+      <span class="p">心理師</span>
+      <span class="p">社工師</span>
+    </div>
+
+    <h3 class="sub-h">健保植入適應症（依年齡）</h3>
+    <div class="panel" style="margin-top:14px">
+      <div class="table-wrap">
+        <table class="clin">
+          <thead><tr><th>年齡</th><th>聽損程度</th><th>相關條件</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="age">嬰幼兒<br>（未滿 3 歲）</td>
+              <td><span class="db">兩耳 ≥ 90dB HL</span><br>(0.5、1、2、4K Hz)</td>
+              <td>先前使用助聽器 3–6 個月以上，聽能訓練後言語辨識或語言能力無進展。</td>
+            </tr>
+            <tr>
+              <td class="age">兒童<br>（滿 2–未滿 18 歲）</td>
+              <td><span class="db">兩耳 ≥ 70dB HL</span><br>(0.5、1、2、4K Hz)</td>
+              <td>助聽器使用 6 個月以上，助聽後開放式語言測試得分 &lt; 50%，或裸耳語詞測驗得分 &lt; 30%。</td>
+            </tr>
+            <tr>
+              <td class="age">單耳全聾<br>（未滿 18 歲）</td>
+              <td><span class="db">劣耳 ≥ 80dB</span>、優耳 &lt; 30dB<br>(0.5、1、2、4K Hz)</td>
+              <td>助聽後單字詞測試得分 ≤ 5%；建議先有跨傳助聽器（CROS）或其他合適助聽器 3 個月以上經驗。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01" stroke-linecap="round"/></svg><span>以上皆以無植入電極之手術禁忌為前提。可同時雙耳植入或依序植入；每人終身給付接收體與聲音處理器一組，損壞得再植入，以兩組為限。實際適應症以健保署最新公告為準。</span></div>
+
+    <h3 class="sub-h">術後聽能復健</h3>
+    <div class="reward-card" style="margin-top:14px;align-items:flex-start">
+      <div style="flex:1;min-width:240px">
+        <b style="font-size:1.12rem;display:block;margin-bottom:8px">植入只是開始，復健決定成效</b>
+        <p style="font-size:.95rem;opacity:.96;line-height:1.7">電子耳植入後，大腦需要重新學習辨識新的聲音訊號，<b>聽能復健正是決定成效的關鍵後半段</b>。透過規律回診調圖、聽能訓練與語言治療，循序漸進地建立聽辨與口語能力；家屬的陪伴與日常練習同樣重要。復健可於醫院、學校、復健機構，或<b>科林公司</b>進行——代表轉介之後，科林能持續陪伴病患走完整段歷程，是我們的服務延伸優勢。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRODUCTS ===== -->
+  <section class="view" id="products">
+    <div class="eyebrow">產品知識 · 快速辨識機型</div>
+    <h1 class="page">Cochlear 電子耳產品速覽</h1>
+    <p class="lead">門市常被問「有哪些機型、健保有沒有給付、差在哪」。這裡用最精簡的方式幫你快速回答，深入規格再請 CI 專員協助。</p>
+
+    <div class="prod-h">電子耳如何運作？</div>
+    <div class="prod-sub">一句話：把聲音轉成電流訊號，直接刺激聽神經，繞過受損的內耳。</div>
+    <div class="principle">
+      <svg class="art" viewBox="0 0 340 235" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="電子耳運作原理示意圖">
+        <circle cx="158" cy="124" r="106" fill="#F3EEDF" stroke="#E4DECB" stroke-width="2"/>
+        <path d="M104 80 q-4 -16 14 -16 q6 -12 20 -6 q14 -6 18 8 q14 4 6 17 q2 12 -14 10 q-8 7 -19 0 q-15 1 -14 -11 q-10 -3 -7 -12 z" fill="#0F5887" opacity="0.10"/>
+        <path d="M118 74 q10 6 18 0 M112 88 q12 8 26 2 M124 62 q6 5 14 2" stroke="#0F5887" stroke-width="1.6" fill="none" opacity="0.5" stroke-linecap="round"/>
+        <path d="M188 134 q-22 0 -22 20 q0 17 17 17 q13 0 13 -13 q0 -9 -8 -9 q-6 0 -6 6" stroke="#0F5887" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M200 108 q-10 12 -12 26" stroke="#0F5887" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="210" cy="100" r="13" fill="#0F5887"/>
+        <circle cx="210" cy="100" r="5" fill="#9fd9cd"/>
+        <line x1="226" y1="48" x2="226" y2="190" stroke="#C9A23A" stroke-width="2" stroke-dasharray="5 5"/>
+        <circle cx="240" cy="100" r="15" fill="#0F5887" opacity="0.12"/>
+        <circle cx="240" cy="100" r="15" stroke="#0F5887" stroke-width="3"/>
+        <circle cx="240" cy="100" r="4.5" fill="#0F5887"/>
+        <path d="M284 118 q-26 -14 -34 -16" stroke="#16B79A" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M280 154 Q272 116 290 112 Q304 109 304 128 L304 146 Q304 156 294 156 Z" fill="#16B79A"/>
+        <path d="M303 120 Q316 118 312 134" stroke="#16B79A" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M256 112 q18 2 16 24 q-2 18 -20 18" stroke="#0F5887" stroke-width="2" fill="none" opacity="0.4"/>
+        <g font-family="Inter, sans-serif" font-weight="700" font-size="11" text-anchor="middle">
+          <g><circle cx="300" cy="100" r="9" fill="#FFC400"/><text x="300" y="104" fill="#082f4a">1</text></g>
+          <g><circle cx="296" cy="148" r="9" fill="#FFC400"/><text x="296" y="152" fill="#082f4a">2</text></g>
+          <g><circle cx="240" cy="74" r="9" fill="#FFC400"/><text x="240" y="78" fill="#082f4a">3</text></g>
+          <g><circle cx="198" cy="76" r="9" fill="#0F5887"/><text x="198" y="80" fill="#fff">4</text></g>
+          <g><circle cx="158" cy="168" r="9" fill="#0F5887"/><text x="158" y="172" fill="#fff">5</text></g>
+          <g><circle cx="110" cy="70" r="9" fill="#0F5887"/><text x="110" y="74" fill="#fff">6</text></g>
+        </g>
+        <text x="272" y="206" font-family="Noto Sans TC, sans-serif" font-size="11" font-weight="700" fill="#16B79A" text-anchor="middle">體外裝置</text>
+        <text x="150" y="222" font-family="Noto Sans TC, sans-serif" font-size="11" font-weight="700" fill="#0F5887" text-anchor="middle">體內裝置</text>
+        <text x="226" y="42" font-family="Noto Sans TC, sans-serif" font-size="10" fill="#C9A23A" text-anchor="middle">皮膚</text>
+      </svg>
+      <ol class="flow">
+        <li><span class="fn2"></span><div><b>麥克風接收聲音</b><span class="d2">處理器上的麥克風收進環境聲音。</span></div></li>
+        <li><span class="fn2"></span><div><b>處理器轉成數位訊號</b><span class="d2">聲音處理器把聲音編碼成數位訊號。</span></div></li>
+        <li><span class="fn2"></span><div><b>線圈傳送訊號</b><span class="d2">訊號經導線送到頭皮上的發射線圈。</span></div></li>
+        <li><span class="fn2"></span><div><b>磁感應穿過皮膚</b><span class="d2">透過磁感應傳到體內的接收—刺激器。</span></div></li>
+        <li><span class="fn2"></span><div><b>電極刺激聽神經</b><span class="d2">電極在耳蝸內放電，刺激聽神經纖維。</span></div></li>
+        <li><span class="fn2"></span><div><b>大腦產生聽覺</b><span class="d2">訊號經聽神經傳到大腦，形成「聽到」的感覺。</span></div></li>
+      </ol>
+    </div>
+
+    <div class="prod-h">植入體（手術植入，終身使用）</div>
+    <div class="prod-sub">植入體型號決定電極，需由醫師依耳蝸狀況選擇。門市先掌握「健保 vs 自費」即可。</div>
+    <div class="cards">
+      <div class="prod-card hl">
+        <div class="pic"><svg viewBox="0 0 150 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="植入體示意"><circle cx="34" cy="34" r="20" fill="#0F5887" opacity="0.12"/><circle cx="34" cy="34" r="20" stroke="#0F5887" stroke-width="3"/><circle cx="34" cy="34" r="6" fill="#0F5887"/><path d="M53 42 q9 8 18 8" stroke="#0F5887" stroke-width="3" stroke-linecap="round"/><rect x="69" y="40" width="30" height="22" rx="8" fill="#16B79A"/><path d="M99 55 q9 -2 15 4 q7 7 21 4" stroke="#0F5887" stroke-width="3" stroke-linecap="round"/><circle cx="137" cy="63" r="3" fill="#0F5887"/></svg></div>
+        <div class="prod-top"><div><div class="model">Nucleus Profile（500 系列）</div><div class="series">CI512 / CI522 / CI532</div></div><span class="badge free">健保免費</span></div>
+        <ul>
+          <li>健保給付的標準植入體系列，病患零自費負擔。</li>
+          <li>厚度僅 3.9mm，久經驗證的可靠度。</li>
+          <li>MRI 檢查需配合包紮或移除磁鐵。</li>
+          <li>最常見搭配：<b>522 + N7</b>（健保標配組合）。</li>
+        </ul>
+      </div>
+      <div class="prod-card">
+        <div class="pic"><svg viewBox="0 0 150 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="植入體示意"><circle cx="34" cy="34" r="20" fill="#0F5887" opacity="0.12"/><circle cx="34" cy="34" r="20" stroke="#0F5887" stroke-width="3"/><circle cx="34" cy="34" r="6" fill="#0F5887"/><path d="M53 42 q9 8 18 8" stroke="#0F5887" stroke-width="3" stroke-linecap="round"/><rect x="69" y="40" width="30" height="22" rx="8" fill="#16B79A"/><path d="M99 55 q9 -2 15 4 q7 7 21 4" stroke="#0F5887" stroke-width="3" stroke-linecap="round"/><circle cx="137" cy="63" r="3" fill="#0F5887"/></svg></div>
+        <div class="prod-top"><div><div class="model">Nucleus Profile Plus（600 系列）</div><div class="series">CI612 / CI622 / CI632</div></div><span class="badge paid">自費升級</span></div>
+        <ul>
+          <li>最新一代植入體，可選擇自費升級。</li>
+          <li>同樣 3.9mm 薄型，可靠度再進化。</li>
+          <li>MRI 更便利：1.5T 與 3.0T 皆無需拆卸磁鐵。</li>
+          <li>常見搭配：<b>632 + N8</b>（自費升級組合）。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01" stroke-linecap="round"/></svg><span><b>「健保免費」請看適應症、不是看系列。</b>500 系列是健保給付時採用的系列；但是否免費，取決於病患<b>是否符合健保適應症</b>。不符合條件者（例如部分成人、不對稱聽損）即使用 500 系列仍需自費，再申請補助。請勿直接對客戶說「一定免費」，實際以 CI 專員評估為準。</span></div>
+
+    <div class="prod-h">聲音處理器（體外配戴，可選擇升級）</div>
+    <div class="prod-sub">同一顆植入體可搭配不同處理器。N7 為健保標配，N8 與 Kanso 2 為自費升級選項。</div>
+    <div class="cards">
+      <div class="prod-card hl">
+        <div class="pic"><svg viewBox="0 0 150 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="耳掛式處理器示意"><circle cx="32" cy="34" r="16" fill="#0F5887" opacity="0.12"/><circle cx="32" cy="34" r="16" stroke="#0F5887" stroke-width="3"/><circle cx="32" cy="34" r="4.5" fill="#0F5887"/><path d="M48 40 q24 14 40 6" stroke="#0F5887" stroke-width="3" stroke-linecap="round"/><path d="M92 70 Q84 34 104 30 Q120 27 120 48 L120 64 Q120 72 110 72 Z" fill="#16B79A"/><path d="M119 38 Q134 36 130 54" stroke="#16B79A" stroke-width="4.5" fill="none" stroke-linecap="round"/><circle cx="104" cy="38" r="3" fill="#ffffff"/></svg></div>
+        <div class="prod-top"><div><div class="model">Nucleus 7（N7）</div><div class="series">耳掛式 BTE</div></div><span class="badge free">健保標配</span></div>
+        <ul>
+          <li>健保標準配備的耳掛式處理器，成熟可靠。</li>
+          <li>可直接串流 iPhone / Android 來電與音樂。</li>
+          <li>搭配 Aqua+ 防水套可達 IP68，安心玩水。</li>
+          <li>充電電池或拋棄式電池皆可使用。</li>
+        </ul>
+      </div>
+      <div class="prod-card">
+        <div class="pic"><svg viewBox="0 0 150 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="耳掛式處理器示意"><circle cx="32" cy="34" r="16" fill="#0F5887" opacity="0.12"/><circle cx="32" cy="34" r="16" stroke="#0F5887" stroke-width="3"/><circle cx="32" cy="34" r="4.5" fill="#0F5887"/><path d="M48 40 q24 14 40 6" stroke="#0F5887" stroke-width="3" stroke-linecap="round"/><path d="M92 70 Q84 34 104 30 Q120 27 120 48 L120 64 Q120 72 110 72 Z" fill="#16B79A"/><path d="M119 38 Q134 36 130 54" stroke="#16B79A" stroke-width="4.5" fill="none" stroke-linecap="round"/><circle cx="104" cy="38" r="3" fill="#ffffff"/></svg></div>
+        <div class="prod-top"><div><div class="model">Nucleus 8（N8）</div><div class="series">耳掛式 BTE</div></div><span class="badge paid">自費升級</span></div>
+        <ul>
+          <li>市面上最小最輕的耳掛式處理器（比 N7 小 15%、輕 13%）。</li>
+          <li>SCAN 2 智慧聆聽，吵雜環境語音更清晰。</li>
+          <li>升級 ForwardFocus，吵雜環境平均改善約 5 dB。</li>
+          <li>支援未來 Bluetooth LE / Auracast 連結。</li>
+        </ul>
+      </div>
+      <div class="prod-card">
+        <div class="pic"><svg viewBox="0 0 150 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="鈕扣一體式處理器示意"><circle cx="75" cy="45" r="31" fill="#16B79A" opacity="0.14"/><circle cx="75" cy="45" r="31" stroke="#0F5887" stroke-width="3"/><circle cx="75" cy="45" r="16" stroke="#0F5887" stroke-width="2.5"/><circle cx="75" cy="45" r="4.5" fill="#16B79A"/></svg></div>
+        <div class="prod-top"><div><div class="model">Kanso 2</div><div class="series">鈕扣一體式</div></div><span class="badge paid">自費升級</span></div>
+        <ul>
+          <li>無耳掛的一體式設計，配戴更隱密。</li>
+          <li>充飽電可用約 18 小時，放入充電盒同時乾燥。</li>
+          <li>輕觸即可開關，操作直覺；多種顏色可選。</li>
+          <li>適合不想戴耳掛、追求簡約的使用者。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01" stroke-linecap="round"/></svg><span>以上為門市快速辨識用途。實際健保給付範圍、自費差額與適用機型，請以健保署公告與 CI 專員報價為準。產品圖為示意插圖，正式版可替換為科林官方產品照片。</span></div>
+  </section>
+
+  <!-- ===== SUBSIDY ===== -->
+  <section class="view" id="subsidy">
+    <div class="eyebrow">補助懶人包 · 消弭費用疑慮</div>
+    <h1 class="page">人工電子耳補助一覽</h1>
+    <p class="lead">面對「費用太高負擔不起」的疑慮，先選擇家屬的身分別，最關心的補助金額即時放大顯示。拿著平板直接展示，大幅提升成案機率。</p>
+
+    <div class="filter" id="idfilter">
+      <button class="chip active" data-id="general">一般戶</button>
+      <button class="chip" data-id="mid">中低收入戶</button>
+      <button class="chip" data-id="low">低收入戶</button>
+    </div>
+
+    <div class="cards">
+      <div class="card subcard">
+        <div class="head"><span class="tag">主設備</span><span class="term">終身一次</span></div>
+        <h4>人工電子耳（成人）</h4>
+        <div class="amt" data-key="implant"><small>NT$ </small><span class="num">300,000</span></div>
+        <div class="cond"><b>適用條件：</b>18 歲以上、未滿 65 歲，優耳 &gt;90dB，具口語能力，需術前評估。</div>
+      </div>
+      <div class="card subcard">
+        <div class="head"><span class="tag">設備更新</span><span class="term">每 10 年</span></div>
+        <h4>語言處理器更新</h4>
+        <div class="amt" data-key="update"><small>NT$ </small><span class="num">100,000</span></div>
+        <div class="cond"><b>適用條件：</b>原聲音處理器停產、手術滿 3 年，免重新評估。</div>
+      </div>
+      <div class="card subcard">
+        <div class="head"><span class="tag">配件</span><span class="term">每 2 年</span></div>
+        <h4>電子耳配件</h4>
+        <div class="amt" data-key="parts"><small>NT$ </small><span class="num">5,000</span></div>
+        <div class="cond"><b>適用條件：</b>手術滿 3 年，免評估。12 歲以下得每年申請 1 次。</div>
+      </div>
+    </div>
+
+    <div class="nhi-panel">
+      <h3>🧒 18 歲以下：由健保給付</h3>
+      <div class="sub">符合下列任一條件並通過術前評估者，植入手術由全民健保給付。</div>
+      <div class="nhi-grid">
+        <div class="nhi-item"><b>嬰幼兒 0–2 歲</b><p>優耳 ≥ 90dB，需術前評估。</p></div>
+        <div class="nhi-item"><b>兒童 2–18 歲</b><p>優耳 &gt; 70dB，需術前評估。</p></div>
+        <div class="nhi-item"><b>兒童 2–18 歲・單側聽損</b><p>劣耳 &gt; 80dB、優耳 &lt; 30dB，具口語能力，需術前評估。</p></div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.6 6.5L21 9.2l-5 4.3 1.6 6.5L12 16.8 6.4 20l1.6-6.5-5-4.3 6.4-.7z"/></svg></div>
+      <div>
+        <h4>門市加碼情報：台中慈濟</h4>
+        <p><span class="hosp">台中慈濟醫院</span>除健保與輔具補助外，另有更多補助機會可申請。曾有<b>成人個案</b>整合各項補助後，最後<b>自費不到 NT$10 萬</b>即完成植入。由於差額很大，這個管道<b>不限中部</b>——其他縣市的家屬特地到台中慈濟開刀，往往也很划算。只要遇到費用疑慮，都可主動提及，再轉介由 CI 專員協助評估。（實際金額因個案而異，僅供開口參考。）</p>
+      </div>
+    </div>
+
+    <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01" stroke-linecap="round"/></svg><span>金額依社家署「身心障礙者輔具費用補助辦法」（2026 最新版）。實際核定以各地社會局／社家署最新公告為準，建議由總部統一維護更新。</span></div>
+  </section>
+
+  <!-- ===== SCRIPTS ===== -->
+  <section class="view" id="scripts">
+    <div class="eyebrow">情境式破冰話術庫 · 降低開口障礙</div>
+    <h1 class="page">遇到抗拒，這樣接話</h1>
+    <p class="lead">將過往成功轉介的經驗提煉成標準應對腳本。提供循序漸進的引導語，幫助不熟悉 CI 業務的人員也能輕鬆開啟話題。</p>
+
+    <div class="cards">
+      <div class="card"><div class="tag">常見抗拒 01</div><h4>「怕開刀有風險」</h4><div class="obj">病患或家屬擔心手術安全與恢復。</div><div class="script"><b>同理：</b>「您的顧慮我完全理解，這確實是大家最在意的。」<br><b>轉換：</b>「現在電子耳手術已經非常成熟，傷口很小、恢復也快。我這邊有醫院的資料，可以幫您安排一次純諮詢，先了解再決定也不遲。」</div></div>
+      <div class="card"><div class="tag">常見抗拒 02</div><h4>「費用太高負擔不起」</h4><div class="obj">對總價有疑慮，尚未了解補助。</div><div class="script"><b>同理：</b>「我懂，這是一筆需要規劃的費用。」<br><b>轉換：</b>「不過其實各縣市都有補助，很多家庭實際負擔比想像中低。我這邊有您所在地區的補助懶人包，現在就查給您看。」</div></div>
+      <div class="card"><div class="tag">常見抗拒 03</div><h4>「再戴看看助聽器就好」</h4><div class="obj">仍寄望現有方案，未察覺已達瓶頸。</div><div class="script"><b>同理：</b>「助聽器有幫助當然很好，繼續配戴沒問題。」<br><b>轉換：</b>「不過如果戴了三個月以上，聽電話、人多的場合還是很吃力，那可能是聽力已經超過助聽器能處理的範圍。了解一下電子耳，多一個選擇對您只有好處。」</div></div>
+      <div class="card"><div class="tag">常見抗拒 04</div><h4>「年紀大了不想折騰」</h4><div class="obj">高齡者或家屬覺得沒必要。</div><div class="script"><b>同理：</b>「會這樣想很正常，年紀大了當然以舒服為主。」<br><b>轉換：</b>「但聽得清楚其實跟生活品質、跟家人互動很有關係。很多長輩做完之後重新願意跟人聊天。先了解資訊，決定權還是在您。」</div></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  電子耳轉介資訊中樞 · CLINICO 科林集團內部使用 · 原型版本 v1 ·
+  <span style="opacity:.6">本頁資料為示範用途，正式上線前請替換為實際數據</span>
+</footer>
+
+<script>
+  // ---- tab switching ----
+  function go(id){
+    document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.go===id));
+    document.querySelector('nav').classList.remove('open');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.querySelectorAll('[data-go]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.go)));
+
+  // ---- referral checker ----
+  const crits=[...document.querySelectorAll('[data-crit]')];
+  const gauge=document.getElementById('gauge'),gnum=document.getElementById('gnum');
+  const rtitle=document.getElementById('rtitle'),rdesc=document.getElementById('rdesc'),result=document.getElementById('result');
+  function updateChecker(){
+    const n=crits.filter(c=>c.classList.contains('on')).length;
+    gnum.textContent=n+'/3';
+    gauge.style.background=`conic-gradient(var(--teal) ${n/3*360}deg, rgba(255,255,255,.14) 0deg)`;
+    const map={
+      0:['尚未勾選','勾選左側符合的狀況，即時得到判斷建議。',false],
+      1:['可持續觀察','符合 1 項指標。建議持續追蹤聽力變化，適時切入。',false],
+      2:['積極引導','符合 2 項指標，已具轉介潛力。建議主動提供資訊、安排諮詢。',true],
+      3:['強烈建議轉介','三項指標全數符合，是明確的電子耳潛在對象。請立即建立轉介！',true]
+    };
+    const[t,d,go]=map[n];
+    rtitle.textContent=t;rdesc.textContent=d;
+    result.classList.toggle('go',go);
+  }
+  crits.forEach(c=>c.addEventListener('click',()=>{c.classList.toggle('on');updateChecker();}));
+
+  // ---- dashboard: live sync from Google Sheet (轉介追蹤) ----
+  const SHEET_ID='1U7kNGTQ_mLYo4BY_bFxEvG27Z26YxZWqZiQ1_johm6w';
+  const SHEET_NAME='轉介追蹤';
+  const SEED=[
+    {會員編號:'HA0364428',轉介日期:'2026-06-11',轉介門市:'N880-1-耳科北榮醫院HA',服務人員:'游哲禎',狀態:'已登錄'},
+    {會員編號:'HA0204057',轉介日期:'2026-06-10',轉介門市:'N960-嘉義長庚醫院',服務人員:'蘇巧嵐',狀態:'評估中'},
+    {會員編號:'HA0004937',轉介日期:'2026-06-02',轉介門市:'N701-高雄成功門市',服務人員:'陳怡汝',狀態:'已登錄'},
+    {會員編號:'HA0409550',轉介日期:'',轉介門市:'N000B-5-耳科-電子耳業務組',服務人員:'張乃文',狀態:'已開刀'},
+    {會員編號:'HA0162293',轉介日期:'',轉介門市:'N000B-5-耳科-電子耳業務組',服務人員:'張乃文',狀態:'已開刀'},
+    {會員編號:'HA0056584',轉介日期:'',轉介門市:'N000B-5-耳科-電子耳業務組',服務人員:'張乃文',狀態:'已開刀'},
+    {會員編號:'HA0325550',轉介日期:'',轉介門市:'N000B-5-耳科-電子耳業務組',服務人員:'張乃文',狀態:'已開刀'},
+    {會員編號:'HA0411832',轉介日期:'',轉介門市:'N000B-5-耳科-電子耳業務組',服務人員:'丁薏菁',狀態:'已開刀'},
+    {會員編號:'HA0005157',轉介日期:'',轉介門市:'N007-高雄中華門市',服務人員:'劉采霖',狀態:'CI已聯繫'}
+  ];
+  function parseCSV(t){
+    const rows=[];let row=[],cur='',q=false;
+    for(let i=0;i<t.length;i++){const c=t[i];
+      if(q){if(c==='"'){if(t[i+1]==='"'){cur+='"';i++;}else q=false;}else cur+=c;}
+      else{if(c==='"')q=true;else if(c===','){row.push(cur);cur='';}
+        else if(c==='\n'){row.push(cur);rows.push(row);row=[];cur='';}
+        else if(c!=='\r')cur+=c;}
+    }
+    if(cur!==''||row.length){row.push(cur);rows.push(row);}
+    return rows;
+  }
+  async function fetchSheet(){
+    const url='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent(SHEET_NAME);
+    const res=await fetch(url);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const rows=parseCSV(await res.text()).filter(r=>r.some(c=>c.trim()!==''));
+    if(rows.length<2) throw new Error('empty');
+    const head=rows[0].map(h=>h.trim());
+    return rows.slice(1)
+      .map(r=>{const o={};head.forEach((h,i)=>o[h]=(r[i]||'').trim());return o;})
+      .filter(o=>o.會員編號 && o.會員編號!=='會員編號');
+  }
+  function renderDash(data,live){
+    const total=data.length;
+    const surg=data.filter(r=>r.狀態==='已開刀').length;
+    const pend=data.filter(r=>r.狀態==='已登錄').length;
+    const rate=total?Math.round(surg/total*100):0;
+    document.getElementById('kTotal').textContent=total;
+    document.getElementById('kSurg').textContent=surg;
+    document.getElementById('kRate').textContent=rate+'%';
+    document.getElementById('kPend').textContent=pend;
+
+    const stages=[['已登錄',false],['CI已聯繫',false],['評估中',false],['已開刀',true],['不符合/未成案',false]];
+    const counts=stages.map(([s])=>data.filter(r=>r.狀態===s||(s==='不符合/未成案'&&/不符合|未成案/.test(r.狀態||''))).length);
+    const mx=Math.max(1,...counts);
+    document.getElementById('funnel').innerHTML=stages.map(([s,done],i)=>
+      '<div class="fn'+(done?' done':'')+'"><div class="lbl">'+s+'</div><div class="track"><div class="barf" style="width:'+(counts[i]?Math.max(counts[i]/mx*100,9):0)+'%">'+(counts[i]||'')+'</div></div></div>'
+    ).join('');
+
+    const eff=data.filter(r=>r.轉介日期&&r.轉介日期.trim());
+    const map={};
+    eff.forEach(r=>{const k=r.轉介門市||'(未填)';if(!map[k])map[k]={n:0,ppl:new Set(),date:''};map[k].n++;if(r.服務人員)map[k].ppl.add(r.服務人員);if(r.轉介日期>map[k].date)map[k].date=r.轉介日期;});
+    const list=Object.entries(map).map(([store,v])=>({store,n:v.n,ppl:[...v.ppl].join('、'),date:v.date}))
+      .sort((a,b)=>b.n-a.n||(a.date<b.date?1:-1));
+    const body=document.getElementById('lbBody');
+    body.innerHTML=list.length?list.map((x,i)=>{
+      const g=i<3?' g'+(i+1):'';
+      return '<tr><td><span class="rank'+g+'">'+(i+1)+'</span></td><td class="store">'+x.store+'</td><td class="who">'+x.ppl+'</td><td class="r num">'+x.n+'</td><td class="r bonus">$'+(x.n*1000).toLocaleString()+'</td></tr>';
+    }).join('')
+    :'<tr><td colspan="5" style="padding:26px;text-align:center;color:var(--muted)">本期尚無有效轉介</td></tr>';
+
+    const dot=document.getElementById('syncDot'),note=document.getElementById('syncNote'),msg=document.getElementById('syncMsg');
+    if(live){
+      dot.className='sync ok';
+      dot.textContent='● 已連線雲端 · 更新於 '+new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
+      note.style.display='none';
+    }else{
+      dot.className='sync off';
+      dot.textContent='● 顯示範例資料';
+      note.style.display='';
+      msg.innerHTML='<b>目前未連線雲端，顯示內建範例資料。</b>要啟用即時同步：請將該 Google 試算表設為「知道連結的任何人 → 檢視者」。提醒：以檔案直接開啟或在預覽視窗中，瀏覽器可能會擋下外部連線；正式部署到網站後即可正常讀取。';
+    }
+  }
+  async function loadDash(){
+    try{const data=await fetchSheet();renderDash(data,true);}
+    catch(e){renderDash(SEED,false);}
+  }
+  document.getElementById('refreshBtn').addEventListener('click',loadDash);
+  renderDash(SEED,false);  // instant first paint with real numbers
+  loadDash();              // then attempt live sync
+
+  const SUBSIDY={
+    implant:{general:'300,000',mid:'450,000',low:'600,000'},
+    update :{general:'100,000',mid:'150,000',low:'200,000'},
+    parts  :{general:'5,000',  mid:'7,500',  low:'10,000'}
+  };
+  document.querySelectorAll('#idfilter .chip').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      document.querySelectorAll('#idfilter .chip').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+      const id=chip.dataset.id;
+      document.querySelectorAll('.subcard .amt').forEach(a=>{
+        a.querySelector('.num').textContent=SUBSIDY[a.dataset.key][id];
+      });
+    });
+  });
+</script>
+</body>
+</html>
