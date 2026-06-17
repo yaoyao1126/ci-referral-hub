@@ -323,6 +323,28 @@
   .r60-op{font-size:1.4rem;font-weight:800;color:var(--muted)}
   .r60-note{font-size:.83rem;color:var(--muted);margin-top:2px}
 
+  .pay{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;margin-top:20px;box-shadow:var(--shadow)}
+  .pay h3{font-size:1.1rem;font-weight:900;color:var(--navy-700);margin-bottom:4px;display:flex;align-items:center;gap:9px}
+  .pay h3::before{content:"";width:6px;height:20px;background:var(--brand);border-radius:3px}
+  .pay .psub{color:var(--muted);font-size:.9rem;margin-bottom:16px}
+  .paysteps{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+  .payst{flex:1;min-width:148px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
+  .payst .pn{width:26px;height:26px;border-radius:8px;background:var(--navy);color:#fff;display:grid;place-items:center;font-family:"Inter",sans-serif;font-weight:800;font-size:.85rem;margin-bottom:9px}
+  .payst b{display:block;color:var(--navy-700);font-size:.9rem;margin-bottom:3px}
+  .payst span{font-size:.83rem;color:var(--muted);line-height:1.45}
+  .paybox{display:flex;align-items:center;gap:18px;background:linear-gradient(135deg,#FFD43A,var(--brand) 60%,var(--brand-600));border-radius:12px;padding:16px 20px;margin-top:14px;color:var(--navy-900);flex-wrap:wrap}
+  .paybox .amt{font-family:"Inter",sans-serif;font-weight:800;font-size:1.75rem;line-height:1;white-space:nowrap}
+  .paybox .amt small{font-size:.78rem;font-weight:700}
+  .paybox .ptxt{font-size:.92rem;font-weight:600;line-height:1.5;flex:1;min-width:180px}
+
+  .feats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:10px}
+  @media (max-width:760px){.feats{grid-template-columns:repeat(2,1fr)}}
+  .feat{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--brand);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+  .feat .fic{width:40px;height:40px;border-radius:11px;background:rgba(255,196,0,.18);display:grid;place-items:center;color:var(--brand-600);margin-bottom:11px}
+  .feat .fic svg{width:22px;height:22px}
+  .feat b{display:block;color:var(--navy-700);font-size:1rem;margin-bottom:4px}
+  .feat span{font-size:.85rem;color:var(--muted);line-height:1.5}
+
   /* ---------- Subsidy ---------- */
   .filter{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
   .chip{
@@ -415,17 +437,32 @@
   <section class="view" id="flow">
     <div class="eyebrow">零摩擦轉介流程 · 不導入新表單</div>
     <h1 class="page">建立轉介，只要三步驟</h1>
-    <p class="lead">完全沿用既有門市系統，不需額外填寫外部表單。維持你最習慣的作業流程，總部每週自動撈取報表。</p>
+    <p class="lead">完全沿用既有門市系統，不需額外填寫外部表單。維持你最習慣的作業流程，登錄後由 CI 專員接手回覆。</p>
 
     <div class="steps">
       <div class="step"><div class="n"></div><div class="step-body"><h4>於門市系統新增「工作日誌」</h4><p>在「科林助聽器」系統照常新增工作日誌，填寫日期、時間、首次進店、部門與服務人員——都是你每天在做的事，無需學習新工具。</p></div></div>
       <div class="step"><div class="n"></div><div class="step-body"><h4>「服務項目」務必選擇「CI轉介」</h4><p>在「服務資料」區的<b>服務項目</b>欄位，選擇 <span class="tagchip">CI/Baha相關 → CI轉介</span>。<span class="hl">這是唯一的關鍵動作</span>——沒選到，這筆就不會被系統計入轉介，也領不到獎金。</p></div></div>
-      <div class="step"><div class="n"></div><div class="step-body"><h4>按「確定」送出，交給總部</h4><p>總部每週一自動撈取所有「服務項目＝<span class="tagchip">CI轉介</span>」的工作日誌，精準統計、自動發放獎金、更新戰情排行榜。前線只需專注於顧客溝通。</p></div></div>
+      <div class="step"><div class="n"></div><div class="step-body"><h4>按「確定」送出</h4><p>送出後就交給 CI 專員接手，後續轉介進度與獎金由專員與總部處理。前線只需專注於顧客溝通。</p></div></div>
     </div>
 
-    <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01" stroke-linecap="round"/></svg><span><b>關鍵提醒：</b>只有「服務項目」選了「CI轉介」的工作日誌，才會被每週戰報撈取並計算獎金。請同時確認「服務人員」欄位填寫正確，以利獎金歸屬。</span></div>
+    <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01" stroke-linecap="round"/></svg><span><b>關鍵提醒：</b>只有「服務項目」選了「CI轉介」的工作日誌，才會被計入轉介並計算獎金。請務必確認「服務人員」欄位填寫正確，以利獎金歸屬。</span></div>
 
-    <div class="contact">
+<div class="pay">
+      <h3>轉介後續與獎金發放</h3>
+      <div class="psub">登錄之後不用一直追——後續由 CI 專員接手，核對無誤就發獎金。</div>
+      <div class="paysteps">
+        <div class="payst"><div class="pn">1</div><b>門市登錄轉介</b><span>工作日誌「服務項目＝CI轉介」送出。</span></div>
+        <div class="payst"><div class="pn">2</div><b>CI 專員回覆</b><span>專員會在 <b>7 天內</b>於工作日誌回覆「是否成功轉介」。</span></div>
+        <div class="payst"><div class="pn">3</div><b>核對確認</b><span>總部核對成功轉介名單，確認服務人員歸屬。</span></div>
+        <div class="payst"><div class="pn">4</div><b>發放獎金</b><span>核對無誤後，<b>次月 15 日</b>發放。</span></div>
+      </div>
+      <div class="paybox">
+        <div class="amt">NT$1,000<small> / 位</small></div>
+        <div class="ptxt">每位成功轉介個案 NT$1,000，於次月 15 日發放給服務人員。</div>
+      </div>
+    </div>
+
+        <div class="contact">
       <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
       <div style="flex:1">
         <h4>卡關了？聯絡 CI 專員</h4>
@@ -510,6 +547,15 @@
     <div class="eyebrow">產品知識 · 快速辨識機型</div>
     <h1 class="page">Cochlear 電子耳產品速覽</h1>
     <p class="lead">門市常被問「有哪些機型、健保有沒有給付、差在哪」。這裡用最精簡的方式幫你快速回答，深入規格再請 CI 專員協助。</p>
+
+<div class="prod-h">為什麼推薦 Cochlear？</div>
+    <div class="prod-sub">門市開口時最好用的四個重點。</div>
+    <div class="feats">
+      <div class="feat"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><b>最多人選擇</b><span>全球超過 60 萬人植入，信賴人數高於任何其他品牌。</span></div>
+      <div class="feat"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div><b>植入體最薄</b><span>Profile 系列僅 3.9mm，上市時為世界最薄的人工電子耳。</span></div>
+      <div class="feat"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div><b>可靠度最高</b><span>近 99% 植入體長期穩定運作，業界領先的可靠度數據。</span></div>
+      <div class="feat"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg></div><b>處理器選擇多</b><span>耳掛式 N7／N8 與頭戴式 Kanso 2；N8 為市面最小最輕耳掛式。</span></div>
+    </div>
 
     <div class="prod-h">電子耳如何運作？</div>
     <div class="prod-sub">一句話：把聲音轉成電流訊號，直接刺激聽神經，繞過受損的內耳。</div>
@@ -609,7 +655,7 @@
         <div class="head"><span class="tag">設備更新</span><span class="term">每 10 年</span></div>
         <h4>語言處理器更新</h4>
         <div class="amt" data-key="update"><small>NT$ </small><span class="num">100,000</span></div>
-        <div class="cond"><b>適用條件：</b>原聲音處理器停產、手術滿 3 年，免重新評估。</div>
+        <div class="cond"><b>適用條件：</b>原聲音處理器停產、手術滿 5 年，免重新評估。</div>
       </div>
       <div class="card subcard">
         <div class="head"><span class="tag">配件</span><span class="term">每 2 年</span></div>
