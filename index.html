@@ -308,6 +308,21 @@
   .dl-card .info span{font-size:.84rem;color:var(--muted);line-height:1.4}
   .dl-card .arrow{flex:none;color:var(--brand-600);font-weight:800;font-size:1.2rem}
 
+  .rule60{display:flex;gap:20px;align-items:flex-start;background:linear-gradient(135deg,#FFF9E6,#FFF2C6);border:1px solid #F2D479;border-radius:var(--radius);padding:22px 24px;margin:22px 0;flex-wrap:wrap}
+  .rule60 .badge60{flex:none;background:var(--navy);color:#fff;border-radius:14px;padding:14px 16px;font-family:"Inter",sans-serif;font-weight:800;font-size:1.45rem;line-height:1;text-align:center}
+  .rule60 .badge60 span{display:block;font-size:.6rem;letter-spacing:1px;margin-top:7px;color:var(--brand);font-weight:700}
+  .rule60 .r60-main{flex:1;min-width:240px}
+  .rule60 h3{font-size:1.14rem;font-weight:900;color:var(--navy-700);margin-bottom:6px}
+  .rule60 p{font-size:.92rem;color:var(--ink);line-height:1.6}
+  .r60-grid{display:flex;align-items:center;gap:16px;margin:14px 0;flex-wrap:wrap}
+  .r60-item{display:flex;align-items:center;gap:11px}
+  .r60-item .num60{font-family:"Inter",sans-serif;font-weight:800;font-size:1.9rem;color:var(--brand-600);line-height:1;white-space:nowrap}
+  .r60-item .num60 small{font-size:.85rem;font-weight:700}
+  .r60-item .lab{font-size:.88rem;color:var(--ink);line-height:1.35}
+  .r60-item .lab b{color:var(--navy-700)}
+  .r60-op{font-size:1.4rem;font-weight:800;color:var(--muted)}
+  .r60-note{font-size:.83rem;color:var(--muted);margin-top:2px}
+
   /* ---------- Subsidy ---------- */
   .filter{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
   .chip{
@@ -346,8 +361,7 @@
     </div>
     <button class="menu-btn" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
     <nav>
-      <button class="tab active" data-go="dash">戰情總覽</button>
-      <button class="tab" data-go="guide">轉介指南</button>
+      <button class="tab active" data-go="guide">轉介指南</button>
       <button class="tab" data-go="flow">轉介流程</button>
       <button class="tab" data-go="journey">評估與手術</button>
       <button class="tab" data-go="products">產品知識</button>
@@ -359,61 +373,8 @@
 
 <main>
 
-  <!-- ===== DASHBOARD ===== -->
-  <section class="view active" id="dash">
-    <div class="eyebrow">即時串接雲端 · 轉介追蹤表</div>
-    <h1 class="page">本月轉介戰情總覽</h1>
-    <p class="lead">資料即時同步自「轉介追蹤」雲端表單，公開、公平、看得到成果。
-      <span class="sync" id="syncDot">● 連線中…</span>
-      <button class="refresh" id="refreshBtn">↻ 重新整理</button>
-    </p>
-
-    <div class="stat-strip kpi4">
-      <div class="stat"><div class="k">總轉介數</div><div class="v num" id="kTotal">–</div><div class="d">本月累計</div></div>
-      <div class="stat"><div class="k">成功開刀數</div><div class="v num" id="kSurg">–</div><div class="d">已完成植入</div></div>
-      <div class="stat"><div class="k">開刀轉換率</div><div class="v num" id="kRate">–</div><div class="d">開刀 ÷ 轉介</div></div>
-      <div class="stat"><div class="k">待處理</div><div class="v num" id="kPend">–</div><div class="d">已登錄未跟進</div></div>
-    </div>
-
-    <div class="grid2 section-gap">
-      <div class="panel">
-        <div class="panel-head"><h3>🏆 門市轉介排行榜</h3><span class="pill">有效轉介 · 即時</span></div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>排名</th><th>轉介門市</th><th>服務人員</th><th class="r">有效轉介</th><th class="r">預估獎金</th></tr></thead>
-            <tbody id="lbBody"><tr><td colspan="5" style="padding:26px;text-align:center;color:var(--muted)">載入中…</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div>
-        <div class="panel">
-          <div class="panel-head"><h3>各階段案件漏斗</h3></div>
-          <div id="funnel" style="padding:16px 20px"></div>
-        </div>
-        <div class="reward-card" style="margin-top:18px">
-          <div class="big num">1,000<br><small>NTD / 件</small></div>
-          <div class="txt">
-            <b>門檻前移，獎勵更好拿</b>
-            <p>不再需要苦等病患「成功開刀」。只要成功建立轉介名單，即可獲得 NT$1,000 獎勵。</p>
-          </div>
-        </div>
-        <div class="panel" style="margin-top:18px">
-          <div class="panel-head"><h3>獎金發放說明</h3></div>
-          <div style="padding:16px 20px;font-size:.9rem;color:var(--muted);line-height:1.75">
-            <b style="color:var(--navy-700)">發放對象：</b>工作日誌「服務項目＝CI轉介」且「服務人員」填寫正確者。<br>
-            <b style="color:var(--navy-700)">計算方式：</b>每筆有效轉介 NT$1,000，重複個案由總部統一去重。<br>
-            <b style="color:var(--navy-700)">發放時間：</b>每月 <b>15 日</b>發放上個月的有效轉介名單獎金。
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="note" id="syncNote" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01" stroke-linecap="round"/></svg><span id="syncMsg"></span></div>
-  </section>
-
   <!-- ===== GUIDE / CHECKER ===== -->
-  <section class="view" id="guide">
+  <section class="view active" id="guide">
     <div class="eyebrow">實戰轉介指南 · 一分鐘判斷</div>
     <h1 class="page">這位客戶，是潛在的電子耳對象嗎？</h1>
     <p class="lead">勾選眼前客戶符合的狀況，系統即時判斷是否建議轉介。三項核心指標，幫你在一分鐘內做出判斷。</p>
@@ -430,6 +391,20 @@
         <h4 id="rtitle">尚未勾選</h4>
         <p id="rdesc">勾選左側符合的狀況，即時得到判斷建議。</p>
         <div class="cta" id="rcta" data-go="flow">前往建立轉介 →</div>
+      </div>
+    </div>
+
+    <div class="rule60">
+      <div class="badge60">60/60<span>國際指引</span></div>
+      <div class="r60-main">
+        <h3>60／60 電子耳國際轉介指引</h3>
+        <p>國際間廣泛採用的成人快篩準則。成人若<b>同時</b>符合以下兩項，就建議主動轉介評估電子耳：</p>
+        <div class="r60-grid">
+          <div class="r60-item"><div class="num60">&gt;60<small>dB</small></div><div class="lab">優耳聽力<br><b>超過 60 分貝</b></div></div>
+          <div class="r60-op">＋</div>
+          <div class="r60-item"><div class="num60">&lt;60<small>%</small></div><div class="lab">單字語音辨識度<br><b>低於 60%</b></div></div>
+        </div>
+        <p class="r60-note">此為快篩參考；是否適合植入仍須經完整術前評估與醫師判斷。</p>
       </div>
     </div>
 
@@ -715,91 +690,6 @@
     result.classList.toggle('go',go);
   }
   crits.forEach(c=>c.addEventListener('click',()=>{c.classList.toggle('on');updateChecker();}));
-
-  // ---- dashboard: live sync from Google Sheet (轉介追蹤) ----
-  const SHEET_ID='1U7kNGTQ_mLYo4BY_bFxEvG27Z26YxZWqZiQ1_johm6w';
-  const SHEET_NAME='轉介追蹤';
-  const SEED=[
-    {會員編號:'HA0364428',轉介日期:'2026-06-11',轉介門市:'N880-1-耳科北榮醫院HA',服務人員:'游哲禎',狀態:'已登錄'},
-    {會員編號:'HA0204057',轉介日期:'2026-06-10',轉介門市:'N960-嘉義長庚醫院',服務人員:'蘇巧嵐',狀態:'評估中'},
-    {會員編號:'HA0004937',轉介日期:'2026-06-02',轉介門市:'N701-高雄成功門市',服務人員:'陳怡汝',狀態:'已登錄'},
-    {會員編號:'HA0409550',轉介日期:'',轉介門市:'N000B-5-耳科-電子耳業務組',服務人員:'張乃文',狀態:'已開刀'},
-    {會員編號:'HA0162293',轉介日期:'',轉介門市:'N000B-5-耳科-電子耳業務組',服務人員:'張乃文',狀態:'已開刀'},
-    {會員編號:'HA0056584',轉介日期:'',轉介門市:'N000B-5-耳科-電子耳業務組',服務人員:'張乃文',狀態:'已開刀'},
-    {會員編號:'HA0325550',轉介日期:'',轉介門市:'N000B-5-耳科-電子耳業務組',服務人員:'張乃文',狀態:'已開刀'},
-    {會員編號:'HA0411832',轉介日期:'',轉介門市:'N000B-5-耳科-電子耳業務組',服務人員:'丁薏菁',狀態:'已開刀'},
-    {會員編號:'HA0005157',轉介日期:'',轉介門市:'N007-高雄中華門市',服務人員:'劉采霖',狀態:'CI已聯繫'}
-  ];
-  function parseCSV(t){
-    const rows=[];let row=[],cur='',q=false;
-    for(let i=0;i<t.length;i++){const c=t[i];
-      if(q){if(c==='"'){if(t[i+1]==='"'){cur+='"';i++;}else q=false;}else cur+=c;}
-      else{if(c==='"')q=true;else if(c===','){row.push(cur);cur='';}
-        else if(c==='\n'){row.push(cur);rows.push(row);row=[];cur='';}
-        else if(c!=='\r')cur+=c;}
-    }
-    if(cur!==''||row.length){row.push(cur);rows.push(row);}
-    return rows;
-  }
-  async function fetchSheet(){
-    const url='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent(SHEET_NAME);
-    const res=await fetch(url);
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const rows=parseCSV(await res.text()).filter(r=>r.some(c=>c.trim()!==''));
-    if(rows.length<2) throw new Error('empty');
-    const head=rows[0].map(h=>h.trim());
-    return rows.slice(1)
-      .map(r=>{const o={};head.forEach((h,i)=>o[h]=(r[i]||'').trim());return o;})
-      .filter(o=>o.會員編號 && o.會員編號!=='會員編號');
-  }
-  function renderDash(data,live){
-    const total=data.length;
-    const surg=data.filter(r=>r.狀態==='已開刀').length;
-    const pend=data.filter(r=>r.狀態==='已登錄').length;
-    const rate=total?Math.round(surg/total*100):0;
-    document.getElementById('kTotal').textContent=total;
-    document.getElementById('kSurg').textContent=surg;
-    document.getElementById('kRate').textContent=rate+'%';
-    document.getElementById('kPend').textContent=pend;
-
-    const stages=[['已登錄',false],['CI已聯繫',false],['評估中',false],['已開刀',true],['不符合/未成案',false]];
-    const counts=stages.map(([s])=>data.filter(r=>r.狀態===s||(s==='不符合/未成案'&&/不符合|未成案/.test(r.狀態||''))).length);
-    const mx=Math.max(1,...counts);
-    document.getElementById('funnel').innerHTML=stages.map(([s,done],i)=>
-      '<div class="fn'+(done?' done':'')+'"><div class="lbl">'+s+'</div><div class="track"><div class="barf" style="width:'+(counts[i]?Math.max(counts[i]/mx*100,9):0)+'%">'+(counts[i]||'')+'</div></div></div>'
-    ).join('');
-
-    const eff=data.filter(r=>r.轉介日期&&r.轉介日期.trim());
-    const map={};
-    eff.forEach(r=>{const k=r.轉介門市||'(未填)';if(!map[k])map[k]={n:0,ppl:new Set(),date:''};map[k].n++;if(r.服務人員)map[k].ppl.add(r.服務人員);if(r.轉介日期>map[k].date)map[k].date=r.轉介日期;});
-    const list=Object.entries(map).map(([store,v])=>({store,n:v.n,ppl:[...v.ppl].join('、'),date:v.date}))
-      .sort((a,b)=>b.n-a.n||(a.date<b.date?1:-1));
-    const body=document.getElementById('lbBody');
-    body.innerHTML=list.length?list.map((x,i)=>{
-      const g=i<3?' g'+(i+1):'';
-      return '<tr><td><span class="rank'+g+'">'+(i+1)+'</span></td><td class="store">'+x.store+'</td><td class="who">'+x.ppl+'</td><td class="r num">'+x.n+'</td><td class="r bonus">$'+(x.n*1000).toLocaleString()+'</td></tr>';
-    }).join('')
-    :'<tr><td colspan="5" style="padding:26px;text-align:center;color:var(--muted)">本期尚無有效轉介</td></tr>';
-
-    const dot=document.getElementById('syncDot'),note=document.getElementById('syncNote'),msg=document.getElementById('syncMsg');
-    if(live){
-      dot.className='sync ok';
-      dot.textContent='● 已連線雲端 · 更新於 '+new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
-      note.style.display='none';
-    }else{
-      dot.className='sync off';
-      dot.textContent='● 顯示範例資料';
-      note.style.display='';
-      msg.innerHTML='<b>目前未連線雲端，顯示內建範例資料。</b>要啟用即時同步：請將該 Google 試算表設為「知道連結的任何人 → 檢視者」。提醒：以檔案直接開啟或在預覽視窗中，瀏覽器可能會擋下外部連線；正式部署到網站後即可正常讀取。';
-    }
-  }
-  async function loadDash(){
-    try{const data=await fetchSheet();renderDash(data,true);}
-    catch(e){renderDash(SEED,false);}
-  }
-  document.getElementById('refreshBtn').addEventListener('click',loadDash);
-  renderDash(SEED,false);  // instant first paint with real numbers
-  loadDash();              // then attempt live sync
 
   const SUBSIDY={
     implant:{general:'300,000',mid:'450,000',low:'600,000'},
