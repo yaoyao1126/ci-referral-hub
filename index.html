@@ -371,9 +371,16 @@
     h1.page{font-size:1.6rem}
     .reward-card .big{font-size:2.6rem}
   }
+  .wm{position:fixed;inset:0;z-index:40;pointer-events:none;background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzNjAiIGhlaWdodD0iMjUwIj48dGV4dCB4PSIxOCIgeT0iMTUwIiB0cmFuc2Zvcm09InJvdGF0ZSgtMjggMTgwIDEyNSkiIGZvbnQtZmFtaWx5PSInTm90byBTYW5zIFRDJywnUGluZ0ZhbmcgVEMnLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTkiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMwZjU4ODciPuWFp+mDqOS9v+eUqCDCtyDoq4vli7/lpJblgrM8L3RleHQ+PC9zdmc+");background-repeat:repeat;opacity:.06}
+  @media print{.wm{opacity:.13}}
+  footer.disc{position:relative;z-index:60;background:var(--navy);color:#cfe0ee;padding:16px 22px;margin-top:34px;border-top:3px solid var(--brand)}
+  .disc-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .disc .lock{flex:none;background:rgba(255,196,0,.18);color:var(--brand);font-weight:800;font-size:.8rem;padding:5px 12px;border-radius:30px;white-space:nowrap}
+  .disc p{font-size:.82rem;line-height:1.55;color:#cfe0ee;margin:0}
 </style>
 </head>
 <body>
+<div class="wm"></div>
 
 <header>
   <div class="bar">
@@ -701,6 +708,13 @@
   </section>
 
 </main>
+
+<footer class="disc">
+  <div class="disc-in">
+    <span class="lock">🔒 內部使用</span>
+    <p>本網頁為科林儀器內部教育訓練用途，非對外醫療器材廣告；內容僅供同仁參考，請勿外傳或對外散布。</p>
+  </div>
+</footer>
 
 <footer>
   電子耳轉介資訊中樞 · CLINICO 科林集團內部使用 · 原型版本 v1 ·
