@@ -326,7 +326,10 @@
   .pay{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;margin-top:20px;box-shadow:var(--shadow)}
   .pay h3{font-size:1.1rem;font-weight:900;color:var(--navy-700);margin-bottom:4px;display:flex;align-items:center;gap:9px}
   .pay h3::before{content:"";width:6px;height:20px;background:var(--brand);border-radius:3px}
-  .pay .psub{color:var(--muted);font-size:.9rem;margin-bottom:16px}
+  .pay .psub{color:var(--muted);font-size:.9rem;margin-bottom:14px}
+  .paytarget{background:#FFF6DC;border:1px solid #F2D479;border-radius:11px;padding:12px 15px;font-size:.9rem;color:var(--ink);line-height:1.55;margin-bottom:14px}
+  .paytarget b{color:var(--navy-700)}
+  .paynote{font-size:.8rem;color:var(--muted);margin-top:10px;line-height:1.5}
   .paysteps{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
   .payst{flex:1;min-width:148px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
   .payst .pn{width:26px;height:26px;border-radius:8px;background:var(--navy);color:#fff;display:grid;place-items:center;font-family:"Inter",sans-serif;font-weight:800;font-size:.85rem;margin-bottom:9px}
@@ -424,15 +427,16 @@
     </div>
 
     <div class="rule60">
-      <div class="badge60">70/60<span>轉介標準</span></div>
+      <div class="badge60">60/60<span>國際標準</span></div>
       <div class="r60-main">
-        <h3>70／60 電子耳轉介標準</h3>
-        <p>台灣目前推廣的成人轉介標準（比 60／60 更精準）。成人若<b>同時</b>符合以下兩項，就建議主動轉介評估電子耳：</p>
+        <h3>60／60 國際轉介標準</h3>
+        <p>看到這個訊號就該想到轉介。顧客若<b>同時</b>符合以下兩項，就建議主動轉介評估電子耳：</p>
         <div class="r60-grid">
-          <div class="r60-item"><div class="num60">&gt;70<small>dB</small></div><div class="lab">優耳聽力 PTA<br><b>超過 70 分貝</b></div></div>
+          <div class="r60-item"><div class="num60">≥60<small>dB</small></div><div class="lab">裸耳純音聽力 PTA<br><b>60 分貝以上（重度聽損）</b></div></div>
           <div class="r60-op">＋</div>
-          <div class="r60-item"><div class="num60">&lt;60<small>%</small></div><div class="lab">單字語音辨識度<br><b>低於 60%</b></div></div>
+          <div class="r60-item"><div class="num60">≤60<small>%</small></div><div class="lab">裸耳單字辨識率 WRS<br><b>60% 以下（聽得到聽不懂）</b></div></div>
         </div>
+        <p style="font-size:.9rem;color:var(--ink);margin-top:2px">或更簡單：<b style="color:var(--navy-700)">配戴助聽器後效果仍有限</b>——戴著助聽器仍常聽不清楚，就值得轉介。</p>
         <p class="r60-note">此為快篩參考；是否適合植入仍須經完整術前評估與醫師判斷。</p>
       </div>
     </div>
@@ -457,6 +461,7 @@
 <div class="pay">
       <h3>轉介後續與獎金發放</h3>
       <div class="psub">登錄之後不用一直追——後續由 CI 專員接手，核對無誤就發獎金。</div>
+      <div class="paytarget">🎯 <b>第一波鎖定：65 歲以內、雙耳聽損 &gt; 90 dB</b> 的顧客，完成 CI 諮詢即符合（此族群＝符合成人補助申請資格）。同一位顧客限領一次。</div>
       <div class="paysteps">
         <div class="payst"><div class="pn">1</div><b>門市登錄轉介</b><span>工作日誌「服務項目＝CI轉介」送出。</span></div>
         <div class="payst"><div class="pn">2</div><b>CI 專員回覆</b><span>專員會在 <b>7 天內</b>於工作日誌回覆「是否成功轉介」。</span></div>
@@ -465,8 +470,9 @@
       </div>
       <div class="paybox">
         <div class="amt">NT$1,000<small> / 位</small></div>
-        <div class="ptxt">每位成功轉介個案 NT$1,000，於次月 15 日發放給服務人員。</div>
+        <div class="ptxt">每成功轉介一位合格候選顧客（完成 CI 諮詢）NT$1,000，同一顧客限領一次，次月 15 日發放給服務人員。</div>
       </div>
+      <p class="paynote">※ 第一階段方案，執行至 2026/12/31；轉介是「把人接住、送進評估」，不保證手術，是否適合由醫師判定。</p>
     </div>
 
         <div class="contact">
@@ -474,7 +480,7 @@
       <div style="flex:1">
         <h4>卡關了？聯絡 CI 專員</h4>
         <p class="lead2">轉介後客戶有疑問、或不確定是否適合，直接聯絡 CI 專員協助評估，不用自己硬撐：</p>
-        <div class="crow"><b>張乃文</b> · 北區・中區<span><a href="mailto:star@clinico.com.tw" style="color:var(--teal-600);text-decoration:none">star@clinico.com.tw</a></span></div>
+        <div class="crow"><b>張乃文</b> · 中區<span><a href="mailto:star@clinico.com.tw" style="color:var(--teal-600);text-decoration:none">star@clinico.com.tw</a></span></div>
         <div class="crow"><b>柯玉聘</b> · 北區<span><a href="mailto:cora@clinico.com.tw" style="color:var(--teal-600);text-decoration:none">cora@clinico.com.tw</a></span></div>
         <div class="crow"><b>陳雅玲</b> · 南區<span><a href="mailto:ana.chen@clinico.com.tw" style="color:var(--teal-600);text-decoration:none">ana.chen@clinico.com.tw</a></span></div>
         <div class="lead2" style="margin-top:9px;margin-bottom:0">公司內部 WeChat 可直接聯繫，毋需另留 Line。</div>
@@ -697,7 +703,7 @@
   <section class="view" id="scripts">
     <div class="eyebrow">情境式破冰話術庫 · 降低開口障礙</div>
     <h1 class="page">遇到抗拒，這樣接話</h1>
-    <p class="lead">將過往成功轉介的經驗提煉成標準應對腳本。提供循序漸進的引導語，幫助不熟悉 CI 業務的人員也能輕鬆開啟話題。</p>
+    <p class="lead">將過往成功轉介的經驗提煉成標準應對腳本。提供循序漸進的引導語，幫助每一位人員都能輕鬆開啟話題。</p>
 
     <div class="cards">
       <div class="card"><div class="tag">常見抗拒 01</div><h4>「怕開刀有風險」</h4><div class="obj">病患或家屬擔心手術安全與恢復。</div><div class="script"><b>同理：</b>「您的顧慮我完全理解，這確實是大家最在意的。」<br><b>轉換：</b>「現在電子耳手術已經非常成熟，傷口很小、恢復也快。我這邊有醫院的資料，可以幫您安排一次純諮詢，先了解再決定也不遲。」</div></div>
