@@ -99,6 +99,27 @@
   .total{display:flex; justify-content:space-between; align-items:baseline; background:var(--navy); color:#fff; border-radius:12px; padding:14px 16px; margin-top:6px;}
   .total .tt{font-size:13px; color:#B9C2D6;}
   .total .tv{font-size:19px; font-weight:800; color:var(--gold);}
+  #printArea{position:fixed;inset:0;background:#fff;z-index:60;overflow:auto;padding:16px;display:none;}
+  #printArea.on{display:block;}
+  .pbar{display:flex;gap:10px;margin-bottom:12px;}
+  .pbar .btn{flex:1;padding:12px;}
+  #printDoc h2{color:var(--navy);font-size:17px;margin-bottom:4px;}
+  #printDoc .hd{font-size:12.5px;color:var(--ink);}
+  #printDoc table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px;}
+  #printDoc th,#printDoc td{border:1px solid #ccc;padding:5px 6px;vertical-align:middle;}
+  #printDoc th{background:var(--navy);color:#fff;font-size:11.5px;}
+  #printDoc small{color:#777;}
+  #printDoc .tot{text-align:right;font-weight:700;margin-top:10px;font-size:14px;}
+  #printDoc .note{font-size:10.5px;color:#777;margin-top:6px;}
+  .ovl{position:fixed;inset:0;background:rgba(31,42,68,.55);z-index:70;display:flex;align-items:flex-end;justify-content:center;}
+  .ovlbox{background:#fff;width:100%;max-width:430px;border-radius:16px 16px 0 0;padding:18px 20px 26px;}
+  .ovlbox h3{color:var(--navy);font-size:16px;margin-bottom:8px;}
+  .ovlbox p{font-size:13px;color:var(--mute);line-height:1.6;margin-bottom:12px;}
+  .ovlbox a.dl{display:block;text-align:center;background:var(--navy);color:#fff;border-radius:10px;padding:13px;font-weight:700;text-decoration:none;margin-bottom:10px;}
+  @media print{
+    body.pmode .app, body.pmode #cartbar, body.pmode .pbar{display:none !important;}
+    body.pmode #printArea{position:static;padding:0;overflow:visible;}
+  }
   footer{padding:12px 20px 20px; font-size:11px; color:var(--mute); text-align:center; line-height:1.6;}
   .hidden{display:none;}
   @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
@@ -164,7 +185,14 @@
       </div>
     </section>
   </main>
-  <footer>內部工具・僅供 CLINICO 電子耳事業處使用<br>資料版本：2024.11 型錄 v2.4（選購耳別提示）・維護：Stella</footer>
+  <footer>內部工具・僅供 CLINICO 電子耳事業處使用<br>資料版本：2024.11 型錄 v2.5（行動裝置匯出強化）・維護：Stella</footer>
+</div>
+<div id="printArea">
+  <div class="pbar">
+    <button class="btn primary" onclick="window.print()">列印／存成 PDF</button>
+    <button class="btn ghost" onclick="closePrint()">關閉</button>
+  </div>
+  <div id="printDoc"></div>
 </div>
 <div id="cartbar" onclick="openCart()">
   <div class="cinfo"><span id="cbCount"></span><small>點擊查看清單並匯出</small></div>
@@ -428,27 +456,34 @@ function printList(){
   const patient=(earL?("左耳 "+earL.name):"")+(earR?((earL?"／":"")+"右耳 "+earR.name):"");
   const total=CART.reduce((a,r)=>a+r.qty*r.price,0);
   const rows=CART.map(r=>`<tr>
-    <td style="text-align:center">${IMGS[r.ik]?'<img src="'+IMGS[r.ik]+'" style="width:52px;height:52px;object-fit:contain">':'—'}</td>
+    <td style="text-align:center">${IMGS[r.ik]?'<img src="'+IMGS[r.ik]+'" style="width:48px;height:48px;object-fit:contain">':'—'}</td>
     <td>${esc(r.item)}<br><small>${esc(r.proc)}・${esc(r.ear)}${r.sub?"・"+esc(r.sub):""}</small></td>
     <td><b>${esc(r.code)}</b></td><td style="text-align:center">${r.w?esc(r.w):"—"}</td>
     <td style="text-align:right">${fmt(r.price)}</td><td style="text-align:center">${r.qty}</td>
     <td style="text-align:right">${fmt(r.price*r.qty)}</td></tr>`).join("");
-  const w=window.open("","_blank");
-  w.document.write(`<html><head><title>CI 配件訂購清單</title><style>
-    body{font-family:"Microsoft JhengHei",sans-serif;padding:24px;color:#26272B}
-    h2{color:#1F2A44;margin-bottom:6px} table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px}
-    th,td{border:1px solid #ccc;padding:6px 8px;vertical-align:middle}
-    th{background:#1F2A44;color:#fff;font-size:12.5px} small{color:#777}
-    .tot{text-align:right;font-size:15px;font-weight:700;margin-top:10px}
-    .note{font-size:11px;color:#777;margin-top:6px}</style></head><body>
-    <h2>CLINICO 電子耳配件訂購清單</h2>
-    <div style="font-size:13px">列印日期：${ts}　患者主機：${esc(patient)}</div>
+  $("printDoc").innerHTML=`<h2>CLINICO 電子耳配件訂購清單</h2>
+    <div class="hd">列印日期：${ts}　患者主機：${esc(patient)}</div>
     <table><tr><th>產品圖</th><th>品項</th><th>料號</th><th>保固</th><th>單價</th><th>數量</th><th>小計</th></tr>${rows}</table>
     <div class="tot">合計 ${fmt(total)}</div>
-    <div class="note">＊價格為 2024.11 型錄標價，實際金額以報價單為準；保固依型錄標示，未標示者依出貨規定。</div>
-    </body></html>`);
-  w.document.close();
-  setTimeout(()=>{w.focus();w.print();},400);
+    <div class="note">＊價格為 2024.11 型錄標價，實際金額以報價單為準；保固依型錄標示，未標示者依出貨規定。</div>`;
+  document.body.classList.add("pmode");
+  $("printArea").classList.add("on");
+  $("printArea").scrollTop=0;
+}
+function closePrint(){
+  document.body.classList.remove("pmode");
+  $("printArea").classList.remove("on");
+}
+function showDL(blob,fname){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=url; a.download=fname;
+  document.body.appendChild(a); a.click(); a.remove();
+  const ovl=document.createElement("div"); ovl.className="ovl";
+  ovl.innerHTML=`<div class="ovlbox"><h3>匯出 ${fname}</h3>
+    <p>已嘗試自動下載。若手機沒有反應（Line／Teams 內建瀏覽器常會擋下載，建議改用 Safari 或 Chrome 開啟本頁），請點下方按鈕手動下載，或改用「列印圖文版」存成 PDF。</p>
+    <a class="dl" href="${url}" download="${fname}">點此下載檔案</a>
+    <button class="btn ghost" style="width:100%" onclick="this.closest('.ovl').remove()">關閉</button></div>`;
+  document.body.appendChild(ovl);
 }
 function exportOrder(){
   if(!CART.length){alert("清單是空的。");return;}
@@ -462,19 +497,29 @@ function exportOrder(){
     ["＊價格為 2024.11 型錄標價，實際金額以報價單為準"],[],
     ["主機","耳別","品項","料號","規格","保固","單價","數量","小計"],...rows,[],
     ["","","","","","","合計","",total]];
+  let blob,fname;
   if(typeof XLSX!=="undefined"){
     const wb=XLSX.utils.book_new();
     const ws=XLSX.utils.aoa_to_sheet(aoa);
     ws["!cols"]=[{wch:11},{wch:8},{wch:26},{wch:15},{wch:12},{wch:10},{wch:9},{wch:6},{wch:10}];
     XLSX.utils.book_append_sheet(wb,ws,"訂購清單");
-    XLSX.writeFile(wb,"CI配件訂購清單_"+dstr+".xlsx");
+    const out=XLSX.write(wb,{bookType:"xlsx",type:"array"});
+    blob=new Blob([out],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+    fname="CI配件訂購清單_"+dstr+".xlsx";
   }else{
     const csv="\uFEFF"+aoa.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(",")).join("\n");
-    const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
-    const a=document.createElement("a");
-    a.href=URL.createObjectURL(blob); a.download="CI配件訂購清單_"+dstr+".csv"; a.click();
-    alert("目前環境無法載入 Excel 元件，已改匯出 CSV 檔（Excel 可直接開啟）。");
+    blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+    fname="CI配件訂購清單_"+dstr+".csv";
   }
+  const isMobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  try{
+    const file=new File([blob],fname,{type:blob.type});
+    if(isMobile&&navigator.canShare&&navigator.canShare({files:[file]})){
+      navigator.share({files:[file],title:fname}).catch(()=>showDL(blob,fname));
+      return;
+    }
+  }catch(e){}
+  showDL(blob,fname);
 }
 function resetAll(){earL=earR=earPick=cat=null;setStep(1);show(["s1L"]);}
 $("again").onclick=()=>{
